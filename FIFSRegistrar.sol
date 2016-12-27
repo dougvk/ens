@@ -1,6 +1,6 @@
 pragma solidity ^0.4.0;
 
-import 'interface.sol';
+import './AbstractENS.sol';
 
 /**
  * A registrar that allocates subdomains to the first person to claim them.
