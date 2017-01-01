@@ -11,11 +11,11 @@ contract ENS is AbstractENS {
         address resolver;
         uint64 ttl;
     }
-    
+
     mapping(bytes32=>Record) records;
-    
+
     // Logged when the owner of a node assigns a new owner to a subnode.
-    event NewOwner(bytes32 indexed node, bytes32 indexed label, address owner);
+    event NewOwner(bytes32 indexed node, bytes32 indexed label, address owner, bytes32 subnode);
 
     // Logged when the owner of a node transfers ownership to a new account.
     event Transfer(bytes32 indexed node, address owner);
@@ -25,27 +25,27 @@ contract ENS is AbstractENS {
 
     // Logged when the TTL of a node changes
     event NewTTL(bytes32 indexed node, uint64 ttl);
-    
+
     // Permits modifications only by the owner of the specified node.
     modifier only_owner(bytes32 node) {
         if(records[node].owner != msg.sender) throw;
         _;
     }
-    
+
     /**
      * Constructs a new ENS registrar.
      */
-    function ENS() {
-        records[0].owner = msg.sender;
+    function ENS(bytes32 TLD) {
+        records[TLD].owner = msg.sender;
     }
-    
+
     /**
      * Returns the address that owns the specified node.
      */
     function owner(bytes32 node) constant returns (address) {
         return records[node].owner;
     }
-    
+
     /**
      * Returns the address of the resolver for the specified node.
      */
@@ -80,7 +80,7 @@ contract ENS is AbstractENS {
      */
     function setSubnodeOwner(bytes32 node, bytes32 label, address owner) only_owner(node) {
         var subnode = sha3(node, label);
-        NewOwner(node, label, owner);
+        NewOwner(node, label, owner, subnode);
         records[subnode].owner = owner;
     }
 
