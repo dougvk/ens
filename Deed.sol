@@ -31,7 +31,7 @@ contract Deed {
         creationDate = now;
         active = true;
     }
-        
+
     function setOwner(address newOwner) onlyRegistrar {
         owner = newOwner;
         OwnerChanged(newOwner);
@@ -40,7 +40,7 @@ contract Deed {
     function setRegistrar(address newRegistrar) onlyRegistrar {
         registrar = newRegistrar;
     }
-    
+
     function setBalance(uint newValue) onlyRegistrar onlyActive payable {
         // Check if it has enough balance to set the value
         if (this.balance < newValue) throw;
@@ -53,18 +53,18 @@ contract Deed {
      * @param refundRatio The amount*1/1000 to refund
      */
     function closeDeed(uint refundRatio) onlyRegistrar onlyActive {
-        active = false;            
+        active = false;
         if (! burn.send(((1000 - refundRatio) * this.balance)/1000)) throw;
         DeedClosed();
         destroyDeed();
-    }    
+    }
 
     /**
      * @dev Close a deed and refund a specified fraction of the bid value
      */
     function destroyDeed() {
         if (active) throw;
-        if(owner.send(this.balance)) 
+        if(owner.send(this.balance))
             selfdestruct(burn);
         else throw;
     }
