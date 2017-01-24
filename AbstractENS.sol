@@ -10,7 +10,7 @@ contract AbstractENS {
     function setTTL(bytes32 node, uint64 ttl);
 
     event Transfer(bytes32 indexed node, address owner);
-    event NewOwner(bytes32 indexed node, bytes32 indexed label, address owner);
+    event NewOwner(bytes32 indexed node, bytes32 indexed label, address owner, bytes32 subnode);
     event NewResolver(bytes32 indexed node, address resolver);
     event NewTTL(bytes32 indexed node, uint64 ttl);
 }
